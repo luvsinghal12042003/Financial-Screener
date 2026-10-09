@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Launch Access | Equity Finance Screener & Terminal</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/launch.css?v=1.0">
+</head>
+<body>
+    <div class="launch-layout">
+        <!-- Top Navigation -->
+        <header class="launch-header">
+            <div class="header-inner">
+                <div class="brand-group">
+                    <div class="brand-logo">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                            <polyline points="16 7 22 7 22 13"></polyline>
+                        </svg>
+                    </div>
+                    <div class="brand-names">
+                        <span class="brand-title">FINANCE SCREENER</span>
+                        <span class="brand-badge">PORTAL ACCESS</span>
+                    </div>
+                </div>
+
+                <div class="header-actions">
+                    <a href="/" class="btn btn-outline direct-portal-btn">
+                        <span>Open Terminal Directly</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Hero Section -->
+        <main class="hero-section">
+            <div class="hero-container">
+                <!-- Eyebrow Badge -->
+                <div class="hero-eyebrow">
+                    <span class="pulse-indicator"></span>
+                    <span>PHASE 1 &amp; PHASE 2 LIVE &bull; INSTITUTIONAL EQUITY INTELLIGENCE</span>
+                </div>
+
+                <!-- Hero Headline -->
+                <h1 class="hero-title">
+                    Direct Access to Institutional Equity Intelligence
+                </h1>
+                <p class="hero-subtitle">
+                    Real-time 1-second price polling, interactive candlestick charting, 12+ technical indicators, normalized financial statements (Annual, Quarterly, TTM), and automated CAGR growth analysis.
+                </p>
+
+                <!-- Email Invitation Box -->
+                <div class="access-card" id="access-card">
+                    <div class="access-card-header">
+                        <div class="access-card-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                        </div>
+                        <div class="access-card-title-group">
+                            <h2 class="access-card-title">Get Your Personal Portal Link</h2>
+                            <p class="access-card-desc">Enter your email address below. We'll automatically generate your access link and send it directly to your inbox.</p>
+                        </div>
+                    </div>
+
+                    <!-- Email Submission Form -->
+                    <form id="email-form" class="email-form" autocomplete="off">
+                        <div class="input-wrapper">
+                            <svg class="mail-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                            <input
+                                type="email"
+                                id="email-input"
+                                class="email-input"
+                                placeholder="Enter your work or personal email (e.g. name@domain.com)..."
+                                required
+                                spellcheck="false"
+                            />
+                        </div>
+
+                        <button type="submit" id="submit-btn" class="btn btn-primary submit-btn">
+                            <span id="btn-text">Email Me Portal Link</span>
+                            <span id="btn-spinner" class="spinner-small" style="display: none;"></span>
+                            <svg id="btn-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </button>
+                    </form>
+
+                    <div class="form-microcopy">
+                        <span class="microcopy-item">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            Instant generation
+                        </span>
+                        <span class="microcopy-dot">&bull;</span>
+                        <span class="microcopy-item">No spam guaranteed</span>
+                        <span class="microcopy-dot">&bull;</span>
+                        <span class="microcopy-item">Full terminal features included</span>
+                    </div>
+
+                    <!-- Error Alert -->
+                    <div id="error-alert" class="error-alert" style="display: none;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <span id="error-message">Please enter a valid email address.</span>
+                    </div>
+
+                    <!-- Success State Card -->
+                    <div id="success-card" class="success-card" style="display: none;">
+                        <div class="success-top-row">
+                            <div class="success-icon-badge">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                            </div>
+                            <div class="success-title-group">
+                                <h3 class="success-heading">Access Link Dispatched!</h3>
+                                <p class="success-sub">We've generated and dispatched your direct portal link for <strong id="success-email-display">user@example.com</strong>.</p>
+                            </div>
+                        </div>
+
+                        <div class="success-details-box">
+                            <div class="detail-row">
+                                <span class="detail-label">Delivery Mode:</span>
+                                <span id="delivery-mode-badge" class="delivery-badge smtp">Live SMTP</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Direct Portal Link:</span>
+                                <span id="portal-link-url" class="portal-link-text">http://127.0.0.1:8000/?access=granted</span>
+                            </div>
+                        </div>
+
+                        <div class="success-actions">
+                            <a id="direct-launch-link" href="/" class="btn btn-success action-btn">
+                                <span>Launch Financial Terminal 🚀</span>
+                            </a>
+                            <button type="button" id="copy-link-btn" class="btn btn-outline action-btn">
+                                <span id="copy-btn-text">Copy Link</span>
+                            </button>
+                            <button type="button" id="preview-email-btn" class="btn btn-ghost action-btn">
+                                <span>Preview Email 👁️</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Terminal Teaser Preview -->
+                <div class="terminal-preview-card">
+                    <div class="terminal-window-header">
+                        <div class="window-controls">
+                            <span class="ctrl-dot red"></span>
+                            <span class="ctrl-dot yellow"></span>
+                            <span class="ctrl-dot green"></span>
+                        </div>
+                        <div class="window-title">Equity Screener Terminal &bull; Active Workspace Preview</div>
+                        <div class="window-status">
+                            <span class="live-pulse"></span>
+                            <span>LIVE (1s)</span>
+                        </div>
+                    </div>
+
+                    <div class="terminal-preview-body">
+                        <div class="preview-ticker-header">
+                            <div>
+                                <div class="preview-company-name">RELIANCE INDUSTRIES LIMITED</div>
+                                <div class="preview-meta">RELIANCE.NS &bull; Market: NSE &bull; Currency: INR</div>
+                            </div>
+                            <div class="preview-price-box">
+                                <div class="preview-price">₹1,170.30</div>
+                                <div class="preview-change positive">▲ +₹15.20 (+1.31%)</div>
+                            </div>
+                        </div>
+
+                        <div class="preview-tabs-row">
+                            <span class="preview-tab active">Price Chart</span>
+                            <span class="preview-tab">Income Statement</span>
+                            <span class="preview-tab">Balance Sheet</span>
+                            <span class="preview-tab">Cash Flow</span>
+                            <span class="preview-tab">Financial Ratios</span>
+                            <span class="preview-tab">Growth Analysis</span>
+                        </div>
+
+                        <div class="preview-metric-pills">
+                            <div class="p-pill">
+                                <span class="p-label">Market Cap</span>
+                                <span class="p-val">₹15.94T</span>
+                            </div>
+                            <div class="p-pill">
+                                <span class="p-label">P/E Ratio</span>
+                                <span class="p-val">22.4x</span>
+                            </div>
+                            <div class="p-pill">
+                                <span class="p-label">Revenue (Annual)</span>
+                                <span class="p-val">₹9,01,064 Cr</span>
+                            </div>
+                            <div class="p-pill">
+                                <span class="p-label">Operating Cash Flow</span>
+                                <span class="p-val">₹1,42,860 Cr</span>
+                            </div>
+                            <div class="p-pill">
+                                <span class="p-label">3Y Revenue CAGR</span>
+                                <span class="p-val positive">+18.42%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Platform Feature Pillars -->
+                <section class="pillars-section">
+                    <h2 class="pillars-heading">Complete Equity Analysis Engine Built Inside</h2>
+                    <p class="pillars-subheading">Designed for financial analysts, retail investors, and quant researchers.</p>
+
+                    <div class="pillars-grid">
+                        <div class="pillar-card">
+                            <div class="pillar-icon">⚡</div>
+                            <h3 class="pillar-title">1-Second Live Polling</h3>
+                            <p class="pillar-desc">Sub-second lightweight price polling engine updating tick prices, intraday swings, and live market volume without page reloads.</p>
+                        </div>
+
+                        <div class="pillar-card">
+                            <div class="pillar-icon">📈</div>
+                            <h3 class="pillar-title">Interactive Plotly Charting</h3>
+                            <p class="pillar-desc">Professional Candlestick and Line charts with multi-pane subplots, crosshair spikes, volume overlay bars, and multi-timeframe periods.</p>
+                        </div>
+
+                        <div class="pillar-card">
+                            <div class="pillar-icon">🔬</div>
+                            <h3 class="pillar-title">Server-Side Indicators</h3>
+                            <p class="pillar-desc">SMA (20/50/100/200), EMA (20/50/200), Bollinger Bands, RSI (14), MACD (12, 26, 9), Stochastic Oscillator, and ATR computed with NumPy &amp; Pandas.</p>
+                        </div>
+
+                        <div class="pillar-card">
+                            <div class="pillar-icon">📑</div>
+                            <h3 class="pillar-title">Normalized Financials</h3>
+                            <p class="pillar-desc">Comprehensive Income Statement, Balance Sheet, and Cash Flow tables supporting Annual, Quarterly, and Trailing Twelve Months (TTM) frequencies.</p>
+                        </div>
+
+                        <div class="pillar-card">
+                            <div class="pillar-icon">📊</div>
+                            <h3 class="pillar-title">11 Derived Valuation Ratios</h3>
+                            <p class="pillar-desc">P/E, P/B, ROE, ROA, Debt/Equity, Current Ratio, Operating Margin, CFO/PAT, and Free Cash Flow with exact mathematical formulas disclosed.</p>
+                        </div>
+
+                        <div class="pillar-card">
+                            <div class="pillar-icon">🚀</div>
+                            <h3 class="pillar-title">CAGR &amp; Growth Analysis</h3>
+                            <p class="pillar-desc">Year-on-Year metrics alongside 3-Year and 5-Year Compounded Annual Growth Rates with rigorous safeguards against negative base periods.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Email Preview Modal -->
+        <div id="email-preview-modal" class="modal-backdrop" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-header">
+                    <div class="modal-title-group">
+                        <span class="modal-title">Access Email Preview</span>
+                        <span class="modal-sub">Delivered to recipient mailbox</span>
+                    </div>
+                    <button type="button" id="close-modal-btn" class="modal-close-btn">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="email-meta-strip">
+                        <div><strong>Subject:</strong> ⚡ Your Direct Access Link to the Equity Finance Screener Terminal</div>
+                        <div><strong>To:</strong> <span id="modal-to-email">user@example.com</span></div>
+                    </div>
+                    <div class="email-rendered-preview">
+                        <div class="mock-email-container">
+                            <div class="mock-email-header">
+                                <span class="mock-badge">Institutional Access</span>
+                                <h2>FINANCE SCREENER TERMINAL</h2>
+                            </div>
+                            <div class="mock-email-content">
+                                <p><strong>Hello,</strong></p>
+                                <p>You requested direct access to the <strong>Equity Finance Screener Platform</strong>. Your interactive workspace has been provisioned with real-time market data and fundamental intelligence.</p>
+                                <div class="mock-cta">
+                                    <a id="modal-mock-launch-btn" href="/" class="btn btn-primary" target="_blank">Launch Financial Terminal &rarr;</a>
+                                </div>
+                                <div class="mock-checklist">
+                                    <div>✓ Real-Time 1-Second Price Streaming (NSE, BSE, US)</div>
+                                    <div>✓ Interactive Candlestick Charts &amp; Technical Indicators</div>
+                                    <div>✓ Normalized Annual, Quarterly &amp; TTM Statements</div>
+                                    <div>✓ 11 Derived Valuation Ratios with Disclosed Formulas</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="launch-footer">
+            <div class="footer-inner">
+                <div class="footer-left">
+                    <span><strong>Platform Engine:</strong> Python 3.13 &bull; FastAPI &bull; yfinance &bull; Pandas &bull; Plotly.js</span>
+                </div>
+                <div class="footer-right">
+                    <a href="/" class="footer-link">Open Terminal</a>
+                    <span class="footer-sep">&bull;</span>
+                    <span>Equity Finance Screener Platform</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Page Logic -->
+    <script src="/static/launch.js?v=1.0"></script>
+</body>
+</html>
