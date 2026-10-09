@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Screener | Interactive Equity Market Charting</title>
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css?v=2.5">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Top Navigation / Search Header -->
+        <header class="app-header">
+            <div class="header-branding">
+                <div class="logo-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                        <polyline points="16 7 22 7 22 13"></polyline>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-title">FINANCE SCREENER</span>
+                    <span class="logo-tag">PHASE 1 • TERMINAL</span>
+                </div>
+            </div>
+
+            <div class="search-section">
+                <form id="search-form" class="search-form" autocomplete="off">
+                    <div class="search-input-wrapper">
+                        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input
+                            type="text"
+                            id="ticker-search-input"
+                            placeholder="Search company or ticker (e.g. Reliance, TCS, AAPL, MSFT)..."
+                            autocomplete="off"
+                            spellcheck="false"
+                        />
+                        <button type="button" id="clear-search-btn" class="clear-btn" title="Clear input" style="display: none;">
+                            ✕
+                        </button>
+                    </div>
+                    <button type="submit" id="search-submit-btn" class="btn btn-primary search-btn">
+                        <span>Search</span>
+                    </button>
+                </form>
+
+                <!-- Search Suggestions Autocomplete Dropdown -->
+                <div id="search-dropdown" class="search-dropdown" style="display: none;">
+                    <div id="dropdown-results" class="dropdown-results"></div>
+                </div>
+            </div>
+
+            <!-- Quick Ticker Suggestions -->
+            <div class="quick-tickers" id="quick-tickers">
+                <span class="quick-label">Trending:</span>
+                <button type="button" class="quick-chip" data-ticker="RELIANCE.NS">RELIANCE</button>
+                <button type="button" class="quick-chip" data-ticker="TCS.NS">TCS</button>
+                <button type="button" class="quick-chip" data-ticker="INFY.NS">INFOSYS</button>
+                <button type="button" class="quick-chip" data-ticker="HDFCBANK.NS">HDFC BANK</button>
+                <button type="button" class="quick-chip" data-ticker="ITC.NS">ITC</button>
+                <button type="button" class="quick-chip" data-ticker="AAPL">AAPL</button>
+                <button type="button" class="quick-chip" data-ticker="MSFT">MSFT</button>
+                <button type="button" class="quick-chip" data-ticker="NVDA">NVDA</button>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Global Message / Alert Area -->
+            <div id="alert-banner" class="alert-banner" style="display: none;">
+                <div class="alert-content">
+                    <svg class="alert-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <span id="alert-message">Notice message</span>
+                </div>
+                <div id="alert-suggestions" class="alert-suggestions"></div>
+                <button id="alert-close-btn" class="alert-close-btn">✕</button>
+            </div>
+
+            <!-- Stock Overview Header Section -->
+            <section class="stock-header-card" id="stock-header-card">
+                <div class="header-main-row">
+                    <div class="company-primary-info">
+                        <div class="company-title-row">
+                            <h1 id="stock-company-name" class="company-name">RELIANCE INDUSTRIES LIMITED</h1>
+                            <span id="stock-ticker-badge" class="ticker-badge">RELIANCE.NS</span>
+                        </div>
+                        <div class="company-meta-row">
+                            <span class="meta-item">Market: <strong id="stock-exchange">NSE</strong></span>
+                            <span class="meta-sep">•</span>
+                            <span class="meta-item">Currency: <strong id="stock-currency">INR</strong></span>
+                            <span class="meta-sep">•</span>
+                            <button type="button" id="live-toggle-btn" class="live-pill active" title="Real-time 1-second auto-fetch is active. Click to pause/resume.">
+                                <span class="live-pulse-dot"></span>
+                                <span id="live-pill-text">LIVE (1s)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="price-summary-container">
+                        <div class="price-main-display">
+                            <span id="stock-price" class="current-price">₹1,178.00</span>
+                            <span id="live-tick-indicator" class="live-tick-indicator" title="Last live tick timestamp">Synced</span>
+                        </div>
+                        <div id="stock-change-container" class="price-change-pill positive">
+                            <span id="stock-change-arrow">▲</span>
+                            <span id="stock-change-val">+₹15.20</span>
+                            <span id="stock-change-pct">(+1.31%)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stock Metric Grid -->
+                <div class="stock-metrics-grid">
+                    <div class="metric-item">
+                        <span class="metric-label">Previous Close</span>
+                        <span id="metric-prev-close" class="metric-value">₹1,162.80</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Day Range</span>
+                        <span id="metric-day-range" class="metric-value">₹1,155.00 - ₹1,185.00</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">52 Week Range</span>
+                        <span id="metric-52w-range" class="metric-value">₹1,160.80 - ₹1,611.80</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Volume</span>
+                        <span id="metric-volume" class="metric-value">6,432,190</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Market Cap</span>
+                        <span id="metric-market-cap" class="metric-value">₹15.94T</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">P/E Ratio</span>
+                        <span id="metric-pe" class="metric-value">22.4</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Master Module Navigation Tabs Bar -->
+            <nav class="master-nav-card" id="master-nav-card">
+                <div class="master-tabs-group" id="master-tabs">
+                    <button type="button" class="master-tab-btn active" data-tab="chart" id="tab-btn-chart">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                        </svg>
+                        <span>Price Chart</span>
+                    </button>
+                    <button type="button" class="master-tab-btn" data-tab="income" id="tab-btn-income">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                        <span>Income Statement</span>
+                    </button>
+                    <button type="button" class="master-tab-btn" data-tab="balance" id="tab-btn-balance">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                            <polyline points="2 17 12 22 22 17"></polyline>
+                            <polyline points="2 12 12 17 22 12"></polyline>
+                        </svg>
+                        <span>Balance Sheet</span>
+                    </button>
+                    <button type="button" class="master-tab-btn" data-tab="cashflow" id="tab-btn-cashflow">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                            <polyline points="17 6 23 6 23 12"></polyline>
+                        </svg>
+                        <span>Cash Flow</span>
+                    </button>
+                    <button type="button" class="master-tab-btn" data-tab="ratios" id="tab-btn-ratios">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <span>Financial Ratios</span>
+                    </button>
+                    <button type="button" class="master-tab-btn" data-tab="growth" id="tab-btn-growth">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                        </svg>
+                        <span>Growth Analysis</span>
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Global Workspace Loader & Error Cards -->
+            <div id="financials-loader" class="financials-loader" style="display: none;">
+                <div class="spinner"></div>
+                <div class="loader-text" id="financials-loader-text">Loading fundamental data...</div>
+            </div>
+
+            <div id="financials-error" class="financials-error-card" style="display: none;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <div class="fin-err-text">
+                    <strong id="fin-err-title">Data Unavailable</strong>
+                    <p id="fin-err-desc">Financial data could not be retrieved.</p>
+                </div>
+            </div>
+
+            <!-- VIEW 1: Price Chart Workspace -->
+            <section class="workspace-view active" id="view-chart">
+                <div class="chart-workspace-card">
+                    <!-- Chart Controls Bar -->
+                    <div class="chart-controls-bar">
+                        <!-- Left: Chart Type Toggle -->
+                        <div class="control-group chart-type-toggle">
+                            <button type="button" class="btn-toggle active" data-type="candlestick" id="toggle-candlestick">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="5" width="6" height="14" rx="1"></rect>
+                                    <line x1="12" y1="1" x2="12" y2="5"></line>
+                                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                                </svg>
+                                <span>Candlestick</span>
+                            </button>
+                            <button type="button" class="btn-toggle" data-type="line" id="toggle-line">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                                </svg>
+                                <span>Line</span>
+                            </button>
+                        </div>
+
+                        <!-- Center: Time Period Controls -->
+                        <div class="control-group time-periods" id="period-buttons">
+                            <button type="button" class="period-btn" data-period="1d">1D</button>
+                            <button type="button" class="period-btn" data-period="5d">5D</button>
+                            <button type="button" class="period-btn" data-period="1mo">1M</button>
+                            <button type="button" class="period-btn" data-period="3mo">3M</button>
+                            <button type="button" class="period-btn" data-period="6mo">6M</button>
+                            <button type="button" class="period-btn active" data-period="1y">1Y</button>
+                            <button type="button" class="period-btn" data-period="5y">5Y</button>
+                            <button type="button" class="period-btn" data-period="max">MAX</button>
+                        </div>
+
+                        <!-- Right: Add Indicator Dropdown -->
+                        <div class="control-group indicators-menu-wrapper">
+                            <button type="button" id="indicator-dropdown-btn" class="btn btn-indicator">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                <span>Add Indicator</span>
+                                <span class="dropdown-caret">▼</span>
+                            </button>
+
+                            <!-- Dropdown Menu Box -->
+                            <div id="indicator-menu" class="indicator-menu" style="display: none;">
+                                <div class="indicator-menu-header">
+                                    <span>Technical Indicators</span>
+                                    <button type="button" id="close-ind-menu" class="close-menu-btn">✕</button>
+                                </div>
+                                <div class="indicator-categories">
+                                    <div class="ind-category-group">
+                                        <div class="ind-cat-title">Trend Overlays</div>
+                                        <label class="ind-option"><input type="checkbox" data-id="SMA_20"><span>SMA 20</span><span class="ind-badge-overlay">Overlay</span></label>
+                                        <label class="ind-option"><input type="checkbox" data-id="SMA_50"><span>SMA 50</span><span class="ind-badge-overlay">Overlay</span></label>
+                                        <label class="ind-option"><input type="checkbox" data-id="SMA_100"><span>SMA 100</span><span class="ind-badge-overlay">Overlay</span></label>
+                                        <label class="ind-option"><input type="checkbox" data-id="SMA_200"><span>SMA 200</span><span class="ind-badge-overlay">Overlay</span></label>
+                                        <label class="ind-option"><input type="checkbox" data-id="EMA_20"><span>EMA 20</span><span class="ind-badge-overlay">Overlay</span></label>
+                                        <label class="ind-option"><input type="checkbox" data-id="EMA_50"><span>EMA 50</span><span class="ind-badge-overlay">Overlay</span></label>
+                                        <label class="ind-option"><input type="checkbox" data-id="EMA_200"><span>EMA 200</span><span class="ind-badge-overlay">Overlay</span></label>
+                                    </div>
+                                    <div class="ind-category-group">
+                                        <div class="ind-cat-title">Volatility</div>
+                                        <label class="ind-option"><input type="checkbox" data-id="BB"><span>Bollinger Bands (20, 2)</span><span class="ind-badge-overlay">Overlay</span></label>
+                                        <label class="ind-option"><input type="checkbox" data-id="ATR"><span>ATR (14)</span><span class="ind-badge-subplot">Subplot</span></label>
+                                    </div>
+                                    <div class="ind-category-group">
+                                        <div class="ind-cat-title">Momentum</div>
+                                        <label class="ind-option"><input type="checkbox" data-id="RSI"><span>RSI (14)</span><span class="ind-badge-subplot">Subplot</span></label>
+                                        <label class="ind-option"><input type="checkbox" data-id="MACD"><span>MACD (12, 26, 9)</span><span class="ind-badge-subplot">Subplot</span></label>
+                                        <label class="ind-option"><input type="checkbox" data-id="STOCH"><span>Stochastic (14, 3)</span><span class="ind-badge-subplot">Subplot</span></label>
+                                    </div>
+                                    <div class="ind-category-group">
+                                        <div class="ind-cat-title">Volume</div>
+                                        <label class="ind-option"><input type="checkbox" data-id="VOL_MA"><span>Volume MA (20)</span><span class="ind-badge-overlay">Overlay</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Active Indicators Chips Bar -->
+                    <div class="active-indicators-bar" id="active-indicators-bar">
+                        <span class="active-ind-label">Indicators:</span>
+                        <div id="active-chips-container" class="active-chips-container">
+                            <span class="no-indicators-hint">No indicators applied. Click "+ Add Indicator" above.</span>
+                        </div>
+                        <button type="button" id="clear-all-indicators-btn" class="btn-clear-all" style="display: none;">Clear All</button>
+                    </div>
+
+                    <!-- Chart Canvas Area with Loader -->
+                    <div class="chart-canvas-container" id="chart-canvas-container">
+                        <div id="chart-loader" class="chart-loader" style="display: none;">
+                            <div class="spinner"></div>
+                            <div class="loader-text">Fetching market data...</div>
+                        </div>
+                        <div id="plotly-chart" class="plotly-chart"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 2: Financial Statements Workspace (Income, Balance, Cash Flow) -->
+            <section class="workspace-view" id="view-statements" style="display: none;">
+                <div class="financials-card">
+                    <!-- Statement Control Toolbar -->
+                    <div class="fin-toolbar-row">
+                        <div class="fin-title-block">
+                            <h2 class="fin-heading" id="statement-title-display">Income Statement</h2>
+                            <div class="fin-meta-tags">
+                                <span class="meta-tag" id="fin-company-tag">RELIANCE.NS</span>
+                                <span class="meta-tag-sep">•</span>
+                                <span class="meta-tag" id="fin-currency-display">Currency: <strong>INR</strong></span>
+                                <span class="meta-tag-sep">•</span>
+                                <span class="meta-tag">Latest Filing: <strong id="fin-latest-period-val">--</strong></span>
+                            </div>
+                        </div>
+
+                        <div class="fin-controls-right">
+                            <div class="frequency-selector-group">
+                                <span class="freq-label">Period:</span>
+                                <div class="freq-pills" id="frequency-pills">
+                                    <button type="button" class="freq-pill active" data-freq="annual">Annual</button>
+                                    <button type="button" class="freq-pill" data-freq="quarterly">Quarterly</button>
+                                    <button type="button" class="freq-pill" data-freq="ttm">TTM</button>
+                                </div>
+                            </div>
+                            <span class="fin-unit-badge" id="fin-unit-badge">Unit: ₹ Crores</span>
+                        </div>
+                    </div>
+
+                    <!-- Contextual Chart Panel (Visible on Income & Cash Flow) -->
+                    <div class="fin-contextual-chart-box" id="contextual-chart-box" style="display: none;">
+                        <div class="fin-chart-header">
+                            <h3 class="fin-chart-title" id="contextual-chart-title">Revenue &amp; Net Profit Trend</h3>
+                            <span class="fin-chart-sub" id="contextual-chart-sub">Annual Trend Analysis</span>
+                        </div>
+                        <div id="contextual-fin-chart" class="fin-plotly-chart"></div>
+                    </div>
+
+                    <!-- Statement Table -->
+                    <div class="statement-table-wrapper" id="statement-table-wrapper">
+                        <table class="financial-statement-table" id="financial-statement-table">
+                            <thead id="statement-table-head"></thead>
+                            <tbody id="statement-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 3: Financial Ratios Workspace -->
+            <section class="workspace-view" id="view-ratios" style="display: none;">
+                <div class="financials-card">
+                    <div class="fin-toolbar-row">
+                        <div class="fin-title-block">
+                            <h2 class="fin-heading">Financial Ratios &amp; Valuation Multiples</h2>
+                            <p class="fin-subheading">Core fundamental ratios across valuation, profitability, leverage, and efficiency with exact mathematical definitions disclosed.</p>
+                        </div>
+                        <div class="fin-controls-right">
+                            <span class="fin-unit-badge" id="ratios-as-of-badge">Latest Period</span>
+                        </div>
+                    </div>
+
+                    <div class="ratios-container" id="ratios-container">
+                        <!-- Valuation -->
+                        <div class="ratios-category-section">
+                            <div class="ratio-category-header">
+                                <h3 class="ratio-cat-heading">Valuation Ratios</h3>
+                                <p class="ratio-cat-desc">Market pricing relative to reported book value and bottom-line earnings</p>
+                            </div>
+                            <div class="ratios-grid" id="ratios-grid-valuation"></div>
+                        </div>
+
+                        <!-- Profitability -->
+                        <div class="ratios-category-section">
+                            <div class="ratio-category-header">
+                                <h3 class="ratio-cat-heading">Profitability &amp; Returns</h3>
+                                <p class="ratio-cat-desc">Margin strength and return efficiency on assets and shareholder equity</p>
+                            </div>
+                            <div class="ratios-grid" id="ratios-grid-profitability"></div>
+                        </div>
+
+                        <!-- Liquidity & Solvency -->
+                        <div class="ratios-category-section">
+                            <div class="ratio-category-header">
+                                <h3 class="ratio-cat-heading">Liquidity &amp; Leverage</h3>
+                                <p class="ratio-cat-desc">Short-term obligation coverage and financial leverage health</p>
+                            </div>
+                            <div class="ratios-grid" id="ratios-grid-liquidity-leverage"></div>
+                        </div>
+
+                        <!-- Efficiency -->
+                        <div class="ratios-category-section">
+                            <div class="ratio-category-header">
+                                <h3 class="ratio-cat-heading">Operating Efficiency &amp; Earnings Quality</h3>
+                                <p class="ratio-cat-desc">Asset turnover velocity and cash flow validation of accounting profits</p>
+                            </div>
+                            <div class="ratios-grid" id="ratios-grid-efficiency"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 4: Growth Analysis Workspace -->
+            <section class="workspace-view" id="view-growth" style="display: none;">
+                <div class="financials-card">
+                    <div class="fin-toolbar-row">
+                        <div class="fin-title-block">
+                            <h2 class="fin-heading">Historical Growth Analysis &amp; CAGR</h2>
+                            <p class="fin-subheading">Compounded Annual Growth Rates (CAGR) and Year-on-Year metrics with conservative handling for negative base periods.</p>
+                        </div>
+                    </div>
+
+                    <div class="growth-cards-grid" id="growth-cards-grid"></div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Platform Roadmap Status Footer -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <span class="footer-dot"></span>
+                    <span><strong>Platform Engine:</strong> Python 3.13 + FastAPI + yfinance • Plotly.js Engine</span>
+                </div>
+                <div class="footer-center">
+                    <span class="roadmap-badge active">Phase 1: Market Charting ✓</span>
+                    <span class="roadmap-badge active">Phase 2: Fundamental Analysis ✓</span>
+                    <span class="roadmap-badge upcoming">Phase 3: Stock Screener</span>
+                    <span class="roadmap-badge upcoming">Phase 4: Watchlists &amp; Accounts</span>
+                </div>
+                <div class="footer-right">
+                    <span>Equity Finance Screener Platform</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Application JavaScript with Cache-Busting -->
+    <script src="/static/app.js?v=2.5"></script>
+</body>
+</html>
